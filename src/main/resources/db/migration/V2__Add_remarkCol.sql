@@ -1,0 +1,1 @@
+alter table USER add remark VARCHAR(256);
