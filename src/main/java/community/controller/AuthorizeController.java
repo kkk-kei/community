@@ -50,6 +50,7 @@ public class AuthorizeController {
             userDB.setToken(token);
             userDB.setGmtCreate(System.currentTimeMillis());
             userDB.setGmtModify(System.currentTimeMillis());
+            userDB.setAvatarUrl(user.getAvatarUrl());
             userMapper.insertUser(userDB);
             response.addCookie(new Cookie("token",token));
 //            request.getSession().setAttribute("user",user);

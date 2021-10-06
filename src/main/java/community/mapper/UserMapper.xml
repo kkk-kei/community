@@ -2,13 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="community.mapper.UserMapper" >
 
-    <insert id="insertUser" parameterType="User" >
-         insert into USER (account_id,name,token,gmt_create,gmt_modify)
-         values(#{accountId},#{name},#{token},#{gmtCreate},#{gmtModify});
+    <insert id="insertUser" parameterType="user" >
+         insert into USER (account_id,name,token,gmt_create,gmt_modify,avatar_url)
+         values(#{accountId},#{name},#{token},#{gmtCreate},#{gmtModify},#{avatarUrl});
     </insert>
 
-    <select id="findByToken" resultType="community.pojo.User">
+    <select id="findByToken" resultType="user">
         select * from USER where token = #{token};
+    </select>
+
+    <select id="findByID" resultType="user">
+        select * from USER where id = #{id};
+    </select>
+
+    <select id="getAll" resultType="user">
+        select * from user;
     </select>
 
 </mapper>

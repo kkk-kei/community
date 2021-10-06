@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="community.mapper.QuestionMapper" >
+
+    <insert id="insertQuestion" parameterType="question" >
+         insert into Question (title,description,gmt_create,gmt_modify,creator,tag)
+         values(#{title,jdbcType=VARCHAR},#{description,jdbcType=VARCHAR},#{gmtCreate,jdbcType=BIGINT},#{gmtModify,jdbcType=BIGINT},#{creator,jdbcType=INTEGER},#{tag,jdbcType=VARCHAR});
+    </insert>
+
+    <select id="findQuestionList" resultType="question">
+        select * from question;
+    </select>
+
+</mapper>
