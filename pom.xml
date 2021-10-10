@@ -97,7 +97,7 @@
                 <version>8.0.0-beta3</version>
                 <configuration>
                     <url>jdbc:h2:~/community</url>
-<!--                    <user>sa</user>-->
+            <!--    <user>sa</user>       -->
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -107,6 +107,20 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.4.200</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
         </plugins>
 
         <!--  Mybaits扫描映射文件      -->

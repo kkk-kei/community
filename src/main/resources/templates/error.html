@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script type="text/javascript" src="jquery/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+</head>
+<body>
+<div th:insert="navgation :: nav"></div>
+<div class="jumbotron">
+    <h1>出错了~</h1>
+    <p th:text="${errormsg}"></p>
+    <p><a class="btn btn-success btn-lg" href="/" role="button">回到主页</a></p>
+</div>
+</body>
+</html>

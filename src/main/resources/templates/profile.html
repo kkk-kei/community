@@ -3,24 +3,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Index</title>
-    <link rel="stylesheet" href="css/bootstrap.css"/>
-    <link rel="stylesheet" href="css/bootstrap-theme.css"/>
-    <link rel="stylesheet" href="css/community.css"/>
-    <script type="text/javascript" src="jquery/jquery-3.6.0.js"></script>
-    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <title>Profile</title>
+    <link rel="stylesheet" href="/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
+    <link rel="stylesheet" href="/css/community.css"/>
+    <script type="text/javascript" src="/jquery/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.js"></script>
 </head>
 <body>
 <div th:insert="navgation :: nav"></div>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span>&nbsp发现</h2><hr>
+            <h2><span th:text="${sectionName}"></span></h2><hr>
 
             <div class="media" th:each="question : ${pageInfo.list}">
                 <div class="media-left">
-                    <a href="">
-                        <img class="media-object img-rounded" th:src="${question.user.avatarUrl}">
+                    <a>
+                        <img class="media-object" th:src="${question.user.avatarUrl}">
                     </a>
                 </div>
                 <div class="media-body">
@@ -30,7 +30,7 @@
             </div>
 
             <!--   分页         -->
-            <nav class="pageNav" aria-label="Page navigation" th:if="pageInfo.pages!=0">
+            <nav class="pageNav" aria-label="Page navigation" th:if="${pageInfo.navigateFirstPage!=0}">
                 <ul class="pagination">
                     <li th:if="${pageInfo.navigateFirstPage!=1}">
                         <a  aria-label="Previous" th:href="@{'?pageNum='+${1}}">
@@ -59,7 +59,13 @@
             </nav>
         </div>
         <div class="col-lg-3 col-md-3 col-md-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-fire"></span>&nbsp热门话题</h2>
+            <h2><span class="glyphicon glyphicon-user"></span>&nbsp个人中心</h2><hr>
+            <div class="list-group">
+                <a href="/profile/center" th:class="${section == 'center' ? 'list-group-item list-group-item-info' : 'list-group-item'}"><span class="glyphicon glyphicon-home"></span>&nbsp个人资料</a>
+                <a href="/profile/questions" th:class="${section == 'questions' ? 'list-group-item list-group-item-info' : 'list-group-item'}"><span class="glyphicon glyphicon-edit"></span>&nbsp我的提问</a>
+                <a href="#" class="list-group-item"><span class="glyphicon glyphicon-star"></span>&nbsp我的关注</a>
+                <a href="#" class="list-group-item"><span class="glyphicon glyphicon-comment"></span><span class="badge">14</span>&nbsp我的回复</a>
+            </div>
         </div>
     </div>
 </div>

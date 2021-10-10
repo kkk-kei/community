@@ -2,9 +2,9 @@ package community.controller;
 
 import community.dto.AccessTokenDTO;
 import community.dto.GiteeUser;
-import community.mapper.UserMapper;
-import community.pojo.User;
+import community.model.User;
 import community.provider.GiteeProvider;
+import community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
-public class AuthorizeController {
+public class UserController{
 
     @Autowired private GiteeProvider provider  = null;
     @Value("${Gitee.Grant_type}") private String Grant_type;
@@ -26,10 +26,10 @@ public class AuthorizeController {
     @Value("${Gitee.Client_secret}") private String Client_secret;
 
     @Autowired
-//    private UserService userService = null;
-    private UserMapper userMapper = null;
-    @GetMapping("/callback")
-    public String callback(@RequestParam(name = "code")String code,
+    private UserService userService = null;
+
+    @GetMapping("/login")
+    public String login(@RequestParam(name = "code")String code,
                            HttpServletRequest request,
                            HttpServletResponse response){
 
@@ -42,21 +42,31 @@ public class AuthorizeController {
 
         String accessToken = provider.getAccessToken(accessTokenDTO);
         GiteeUser user = provider.getUser(accessToken);
+
         if(user!=null){
             User userDB = new User();
             userDB.setAccountId(String.valueOf(user.getId()));
             userDB.setName(user.getName());
             String token = UUID.randomUUID().toString();
             userDB.setToken(token);
-            userDB.setGmtCreate(System.currentTimeMillis());
-            userDB.setGmtModify(System.currentTimeMillis());
             userDB.setAvatarUrl(user.getAvatarUrl());
-            userMapper.insertUser(userDB);
+//          插入或者更新  accountId不变
+            userService.insertOrUpdate(userDB);
             response.addCookie(new Cookie("token",token));
-//            request.getSession().setAttribute("user",user);
             return "redirect:/";
         }else{
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }
