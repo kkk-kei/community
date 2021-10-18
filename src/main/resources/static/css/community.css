@@ -34,11 +34,66 @@ body{
 }
 .questionbtngroup{
     float: right;
-    margin-bottom: 30px;
 }
 .jumbotron{
     margin-left: 80px;
 }
 .errorbtn{
     float: right;
+}
+.btn-comment{
+    float: right;
+    margin: 15px 0;
+}
+.img-comment{
+    margin-top: -10px;
+    margin-bottom: 10px;
+ }
+.comment-tools{
+    color: #999999;
+    margin-top: 10px;
+}
+.comment-tools .icon{
+    margin-right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.comment-tools .active{
+    color: #2aabd2;
+}
+.comment-tools .icon:hover{
+    color: #2aabd2;
+}
+.questionHr{
+    margin-top: 50px;
+}
+.subCommentHr{
+    margin-top: 0;
+}
+.commentCnt{
+    margin-top: -30px;
+    margin-bottom: 15px;
+}
+.sub-comments{
+    border-radius: 5px;
+    border: 1px solid #eeeeee;
+}
+.sub-comment-area{
+    margin-top: 10px;
+}
+.sub-comment-btn{
+    margin: 10px 0;
+}
+.tagItem{
+    margin-right: 5px;
+}
+.relatedItem{
+    text-decoration:none;
+    font-size: 16px;
+}
+.btn-tag{
+    margin: 5px 5px 0 5px;
+}
+.public-title-hr{
+    margin-bottom: 5px;
 }

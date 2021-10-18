@@ -1,15 +1,18 @@
 package community.controller;
 
+import community.dto.CommentReturnDTO;
+import community.enums.CommentTypeEnum;
 import community.mapper.QuestionExtMapper;
-import community.mapper.QuestionMapper;
 import community.model.Question;
-import community.model.QuestionExample;
+import community.service.CommentService;
 import community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Controller
 public class QuestionController{
@@ -18,18 +21,26 @@ public class QuestionController{
     QuestionService questionService = null;
     @Autowired
     QuestionExtMapper questionExtMapper = null;
+    @Autowired
+    CommentService commentService = null;
     
     @GetMapping("/question/{id}")
-    public String toQuestion(@PathVariable(name = "id")Integer id,
+    public String toQuestion(@PathVariable(name = "id")Long id,
                              Model model){
+//        问题
         Question question = questionService.getQuestionById(id);
-
         Question updateQuestion = new Question();
         updateQuestion.setId(question.getId());
         updateQuestion.setViewCount(1);
         questionExtMapper.increaseView(updateQuestion);
-//        question = questionService.getQuestionById(id);
+//        评论
+        List<CommentReturnDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.Question);
+//        相关问题
+        List<Question> relatedQuestions = questionService.selectRelated(question);
+
         model.addAttribute("question",question);
+        model.addAttribute("comments",comments);
+        model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";
     }
 }

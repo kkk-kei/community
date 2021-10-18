@@ -1,8 +1,11 @@
 package community.controller;
 
+import community.cache.TagCache;
+import community.dto.TagDTO;
 import community.model.Question;
 import community.model.User;
 import community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class PublishController{
@@ -20,7 +24,9 @@ public class PublishController{
     QuestionService questionService = null;
 
     @GetMapping("/publish")
-    public String toPublish(){
+    public String toPublish(Model model){
+        List<TagDTO> tagDTOS = TagCache.get();
+        model.addAttribute("tagDTOS",tagDTOS);
         return "publish";
     }
 
@@ -29,9 +35,12 @@ public class PublishController{
             @RequestParam(name = "title") String title,
             @RequestParam(name = "description") String description,
             @RequestParam(name="tag") String tag,
-            @RequestParam(name="id",required = false) Integer id,
+            @RequestParam(name="id",required = false) Long id,
             HttpServletRequest request,
             Model model){
+
+        List<TagDTO> tagDTOS = TagCache.get();
+        model.addAttribute("tagDTOS",tagDTOS);
 
         model.addAttribute("title",title);
         model.addAttribute("description",description);
@@ -48,6 +57,11 @@ public class PublishController{
         }
         if (tag==null||tag==""){
             model.addAttribute("error","标签不能为空！");
+            return "publish";
+        }
+        String invalid = TagCache.filterInvalid(tag);
+        if(StringUtils.isNotBlank(invalid)){
+            model.addAttribute("error","输入非法标签:"+invalid);
             return "publish";
         }
         User user = (User) request.getSession().getAttribute("user");
@@ -67,8 +81,11 @@ public class PublishController{
     }
 
     @GetMapping("/publish/{id}")
-    public String updateQuestion(@PathVariable(name = "id") Integer id,
+    public String updateQuestion(@PathVariable(name = "id") Long id,
                                  Model model){
+        List<TagDTO> tagDTOS = TagCache.get();
+        model.addAttribute("tagDTOS",tagDTOS);
+
 //        可以只找问题，不加user
         Question question = questionService.getQuestionById(id);
         model.addAttribute("title",question.getTitle());

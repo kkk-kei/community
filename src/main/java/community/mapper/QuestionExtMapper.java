@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface QuestionExtMapper {
     int increaseView(Question record);
+    int increaseComment(Question record);
+    List<Question> selectRelated(Question record);
 }

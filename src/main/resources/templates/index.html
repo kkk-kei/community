@@ -9,6 +9,15 @@
     <link rel="stylesheet" href="css/community.css"/>
     <script type="text/javascript" src="jquery/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript">
+        window.onload=function () {
+            let isClose = window.localStorage.getItem("isClose");
+            if(isClose){
+                window.close();
+                window.localStorage.removeItem("isClose");
+            }
+        }
+    </script>
 </head>
 <body>
 <div th:insert="navgation :: nav"></div>

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/community.css"/>
     <script type="text/javascript" src="/jquery/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/community.js"></script>
 </head>
 <body>
 
@@ -17,7 +18,8 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp发起问题</h2><hr>
+            <h2><span class="glyphicon glyphicon-send" aria-hidden="true"></span>&nbsp发起问题</h2>
+            <hr class="public-title-hr">
             <div>
                 <span th:text="${error}" style="color: red"></span>
             </div>
@@ -25,16 +27,38 @@
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
                     <label for="title">问题标题（简单扼要）：</label><br>
-                    <input type="text" class="form-control" id="title" name="title" th:value="${title}" placeholder="问题标题...">
+                    <input type="text" class="form-control" id="title" name="title" th:value="${title}" placeholder="问题标题..." autocomplete="off">
                 </div>
                 <div class="form-group">
-                    <label for="description">问题补充（必填，参照左侧提示）：</label><br>
+                    <label for="description">问题补充（必填，参照右侧提示）：</label><br>
                     <textarea class="form-control" name="description" id="description" th:text="${description}" cols="30" rows="10"></textarea>
                 </div>
+
                 <div class="form-group">
                     <label for="title">添加标签：</label><br>
-                    <input type="text" class="form-control" id="tag" name="tag" th:value="${tag}" placeholder="输入标签，以逗号隔开">
+                    <input type="text" class="form-control" id="tag" name="tag" th:value="${tag}" placeholder="选择标签" autocomplete="off">
+                    <div>
+
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li th:each="tagDTO,state : ${tagDTOS}" th:class="${state.first?'active':''}">
+                                <a th:href="'#'+${tagDTO.categoryName}" th:text="${tagDTO.categoryName}" th:aria-controls="${tagDTO.categoryName}" role="tab" data-toggle="tab"></a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content" >
+                            <div role="tabpanel" th:each="tagDTO,state : ${tagDTOS}" th:class="${state.first ?'tab-pane active':'tab-pane'}" th:id="${tagDTO.categoryName}">
+                                <button type="button" class="btn btn-info btn-tag" th:each="tagItem : ${tagDTO.tags}" onclick="selectTag(this)" th:data-tag="${tagItem}">
+                                    <span class="glyphicon glyphicon-tags"></span>&nbsp;
+                                    <span th:text="${tagItem}"></span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
+
+
                 <button type="submit" class="btn btn-success btn-publish">发起</button>
             </form>
         </div>
