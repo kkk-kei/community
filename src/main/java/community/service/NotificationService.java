@@ -13,6 +13,7 @@ import community.mapper.NotificationMapper;
 import community.mapper.QuestionMapper;
 import community.mapper.UserMapper;
 import community.model.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,36 +43,17 @@ public class NotificationService {
         List<Notification> notifications = notificationMapper.selectByExample(notificationExample);
         PageInfo<Notification> pageInfo = new PageInfo<>(notifications);
         NotificationPageDTO notificationPageDTO = new NotificationPageDTO();
-        notificationPageDTO.setPages(pageInfo.getPages());
-        notificationPageDTO.setPageNum(pageInfo.getPageNum());
-        notificationPageDTO.setHasNextPage(pageInfo.isHasNextPage());
-        notificationPageDTO.setHasPreviousPage(pageInfo.isHasPreviousPage());
-        notificationPageDTO.setNavigateFirstPage(pageInfo.getNavigateFirstPage());
-        notificationPageDTO.setNavigateLastPage(pageInfo.getNavigateLastPage());
-        notificationPageDTO.setNavigatepageNums(pageInfo.getNavigatepageNums());
-//        BeanUtils.copyProperties(pageInfo,notificationPageDTO);
+        BeanUtils.copyProperties(pageInfo,notificationPageDTO);
         ArrayList<NotificationDTO> notificationDTOS = new ArrayList<>();
         for (Notification notification : notifications) {
             Long notifier = notification.getNotifier();
             Long outerid = notification.getOuterid();
             NotificationDTO item = new NotificationDTO();
-            item.setId(notification.getId());
-            item.setNotifier(notifier);
-            item.setNotifierName(userMapper.selectByPrimaryKey(notifier).getName());
-            item.setReceiver(notification.getReceiver());
+            BeanUtils.copyProperties(notification,item);
             item.setOuterid(outerid);
-//            if(notification.getType() == NotificationTypeEnum.Reply_Question.getType()) {
-//            }else{
-//                Comment comment = commentMapper.selectByPrimaryKey(outerid);
-//                item.setOuterTitle(questionMapper.selectByPrimaryKey(comment.getParentId()).getTitle());
-//                item.setTypeName(NotificationTypeEnum.Reply_Comment.getName());
-//            }
-            Question test = questionMapper.selectByPrimaryKey(outerid);
-            item.setOuterTitle(test.getTitle());
+            item.setNotifierName(userMapper.selectByPrimaryKey(notifier).getName());
+            item.setOuterTitle(questionMapper.selectByPrimaryKey(outerid).getTitle());
             item.setTypeName(NotificationTypeEnum.Reply_Question.getName());
-            item.setType(notification.getType());
-            item.setStatus(notification.getStatus());
-            item.setGmtCreate(notification.getGmtCreate());
             notificationDTOS.add(item);
         }
         notificationPageDTO.setList(notificationDTOS);

@@ -1,6 +1,7 @@
 package community.controller;
 
 import community.cache.TagCache;
+import community.dto.QuestionDTO;
 import community.dto.TagDTO;
 import community.model.Question;
 import community.model.User;
@@ -72,7 +73,6 @@ public class PublishController{
         question.setTitle(title);
         question.setCreator(user.getId());
         question.setDescription(description);
-//        questionMapper.insertQuestion(question);
 //        更新或者删除
 //        从页面点进来时，问题已经存在了，此时在页面获取问题的id传到后端，
 //        点击发布时，如果用id查询不到问题，则新增，如果查到，就修改
@@ -87,11 +87,12 @@ public class PublishController{
         model.addAttribute("tagDTOS",tagDTOS);
 
 //        可以只找问题，不加user
-        Question question = questionService.getQuestionById(id);
-        model.addAttribute("title",question.getTitle());
-        model.addAttribute("description",question.getDescription());
-        model.addAttribute("tag",question.getTag());
-        model.addAttribute("id",question.getId());
+//        Question question = questionService.getQuestionById(id);
+        QuestionDTO questionDTO = questionService.getQuestionById(id);
+        model.addAttribute("title",questionDTO.getTitle());
+        model.addAttribute("description",questionDTO.getDescription());
+        model.addAttribute("tag",questionDTO.getTag());
+        model.addAttribute("id",questionDTO.getId());
 
         return "publish";
     }

@@ -1,6 +1,6 @@
 package community.service;
 
-import community.dto.CommentReturnDTO;
+import community.dto.CommentRenderDTO;
 import community.enums.CommentTypeEnum;
 import community.enums.NotificationStatusEnum;
 import community.enums.NotificationTypeEnum;
@@ -72,10 +72,6 @@ public class CommentService {
             notification.setOuterid(comment.getParentId());
         }
         if(comment.getType()==CommentTypeEnum.Comment.getType()){
-//            CommentExample commentExample = new CommentExample();
-//            commentExample.createCriteria()
-//                    .andIdEqualTo(comment.getParentId());
-//            List<Comment> comments = commentMapper.selectByExample(commentExample);
             Comment newComment = commentMapper.selectByPrimaryKey(comment.getParentId());
             notification.setOuterid(newComment.getParentId());
         }
@@ -87,7 +83,7 @@ public class CommentService {
         notificationMapper.insert(notification);
     }
 
-    public List<CommentReturnDTO> listByTargetId(Long id, CommentTypeEnum type) {
+    public List<CommentRenderDTO> listByTargetId(Long id, CommentTypeEnum type) {
 //        找到问题对应的所有评论
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
@@ -110,8 +106,8 @@ public class CommentService {
 //        将评论者与用户匹配
         Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
 //      将评论转化类型
-        List<CommentReturnDTO> commentRetunDTOs = comments.stream().map(comment -> {
-            CommentReturnDTO commentReturnDTO = new CommentReturnDTO();
+        List<CommentRenderDTO> commentRetunDTOs = comments.stream().map(comment -> {
+            CommentRenderDTO commentReturnDTO = new CommentRenderDTO();
             BeanUtils.copyProperties(comment,commentReturnDTO);
             commentReturnDTO.setUser(userMap.get(comment.getCreator()));
             return commentReturnDTO;

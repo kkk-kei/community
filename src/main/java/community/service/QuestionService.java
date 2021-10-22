@@ -2,6 +2,8 @@ package community.service;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import community.dto.QuestionDTO;
+import community.dto.QuestionPageDTO;
 import community.exception.CommonErrorCodeImp;
 import community.exception.CommonException;
 import community.mapper.QuestionExtMapper;
@@ -11,6 +13,7 @@ import community.model.Question;
 import community.model.QuestionExample;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,31 +31,24 @@ public class QuestionService {
     @Autowired
     QuestionExtMapper questionExtMapper = null;
 
-    public PageInfo getQuestionList(String regexpSearch,Integer pageNum){
-//        List<Question> questionList;
-//        if("null".equals(regexpSearch)||regexpSearch==null){
-//            System.out.println("2222222");
-//            PageHelper.startPage(pageNum,5);
-//            QuestionExample questionExample = new QuestionExample();
-//            questionExample.setOrderByClause("gmt_create desc");
-//            questionList = questionMapper.selectByExample(questionExample);
-//        }else{
-//            System.out.println("1111111111");
-//            PageHelper.startPage(pageNum,5);
-//            questionList = questionExtMapper.selectBySearch(regexpSearch);
-//        }
+    public QuestionPageDTO getQuestionList(String regexpSearch, Integer pageNum){
         PageHelper.startPage(pageNum,5);
         List<Question> questionList = questionExtMapper.selectBySearch(regexpSearch);
-
-        for (Question question : questionList) {
-            question.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
-        }
-
         PageInfo<Question> pageInfo = new PageInfo<>(questionList);
-        return pageInfo;
+        QuestionPageDTO questionPageDTO = new QuestionPageDTO();
+        BeanUtils.copyProperties(pageInfo,questionPageDTO);
+        List<QuestionDTO> list = new ArrayList<>();
+        for (Question question : questionList) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
+            list.add(questionDTO);
+        }
+        questionPageDTO.setList(list);
+        return questionPageDTO;
     }
 
-    public PageInfo getQuestionList(Long id,Integer pageNum){
+    public QuestionPageDTO getQuestionList(Long id,Integer pageNum){
 
         PageHelper.startPage(pageNum,5);
         QuestionExample questionExample = new QuestionExample();
@@ -60,22 +56,27 @@ public class QuestionService {
                 .andCreatorEqualTo(id);
         questionExample.setOrderByClause("gmt_create desc");
         List<Question> questionList = questionMapper.selectByExample(questionExample);
-
-        for (Question question : questionList) {
-//            question.setRemark(userMapper.findByID(question.getCreator()).getAvatarUrl());
-            question.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
-//            System.out.println(question);
-        }
         PageInfo<Question> pageInfo = new PageInfo<>(questionList);
-        return pageInfo;
+        QuestionPageDTO questionPageDTO = new QuestionPageDTO();
+        BeanUtils.copyProperties(pageInfo,questionPageDTO);
+        List<QuestionDTO> list = new ArrayList<>();
+        for (Question question : questionList) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question,questionDTO);
+            questionDTO.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
+            list.add(questionDTO);
+        }
+        questionPageDTO.setList(list);
+        return questionPageDTO;
     }
 
-    public Question getQuestionById(Long id){
+    public QuestionDTO getQuestionById(Long id){
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null) throw new CommonException(CommonErrorCodeImp.Question_Not_Found);
-//        Question question = questionMapper.getQuestionById(id);
-        question.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
-        return question;
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question,questionDTO);
+        questionDTO.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
+        return questionDTO;
     }
 
     public void insertOrUpdateQuestion(Question question) {
@@ -92,12 +93,11 @@ public class QuestionService {
             questionExample.createCriteria()
                     .andIdEqualTo(question.getId());
             int updateResult = questionMapper.updateByExampleSelective(question, questionExample);
-//            questionMapper.updateQuestion(question);
             if(updateResult != 1) throw new CommonException(CommonErrorCodeImp.Question_Not_Found);
         }
     }
 
-    public List<Question> selectRelated(Question relatedQuestion) {
+    public List<QuestionDTO> selectRelated(QuestionDTO relatedQuestion) {
         if(StringUtils.isBlank(relatedQuestion.getTag())){
             return new ArrayList<>();
         }
@@ -107,9 +107,13 @@ public class QuestionService {
         question.setId(relatedQuestion.getId());
         question.setTag(regexpTag);
         List<Question> questions = questionExtMapper.selectRelated(question);
-        for (Question question1 : questions) {
-            question1.setUser(userMapper.selectByPrimaryKey(question1.getCreator()));
+        List<QuestionDTO> list = new ArrayList<>();
+        for (Question item : questions) {
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(item,questionDTO);
+            questionDTO.setUser(userMapper.selectByPrimaryKey(item.getCreator()));
+            list.add(questionDTO);
         }
-        return questions;
+        return list;
     }
 }

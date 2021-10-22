@@ -1,6 +1,7 @@
 package community.controller;
 
 import com.github.pagehelper.PageInfo;
+import community.dto.QuestionPageDTO;
 import community.service.QuestionService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,8 @@ public class IndexController{
             regexpSearch = Arrays.stream(searchs).collect(Collectors.joining("|"));
         }
         model.addAttribute("search",regexpSearch);
-        PageInfo pageInfo = questionService.getQuestionList(regexpSearch,pageNum);
+//        PageInfo pageInfo = questionService.getQuestionList(regexpSearch,pageNum);
+        QuestionPageDTO pageInfo = questionService.getQuestionList(regexpSearch, pageNum);
         model.addAttribute("pageInfo",pageInfo);
         return "index";
     }

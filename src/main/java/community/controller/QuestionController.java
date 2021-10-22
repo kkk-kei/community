@@ -1,6 +1,7 @@
 package community.controller;
 
-import community.dto.CommentReturnDTO;
+import community.dto.CommentRenderDTO;
+import community.dto.QuestionDTO;
 import community.enums.CommentTypeEnum;
 import community.mapper.QuestionExtMapper;
 import community.model.Question;
@@ -28,17 +29,18 @@ public class QuestionController{
     public String toQuestion(@PathVariable(name = "id")Long id,
                              Model model){
 //        问题
-        Question question = questionService.getQuestionById(id);
+//        Question question = questionService.getQuestionById(id);
+        QuestionDTO questionDTO = questionService.getQuestionById(id);
         Question updateQuestion = new Question();
-        updateQuestion.setId(question.getId());
+        updateQuestion.setId(questionDTO.getId());
         updateQuestion.setViewCount(1);
         questionExtMapper.increaseView(updateQuestion);
 //        评论
-        List<CommentReturnDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.Question);
+        List<CommentRenderDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.Question);
 //        相关问题
-        List<Question> relatedQuestions = questionService.selectRelated(question);
+        List<QuestionDTO> relatedQuestions = questionService.selectRelated(questionDTO);
 
-        model.addAttribute("question",question);
+        model.addAttribute("question",questionDTO);
         model.addAttribute("comments",comments);
         model.addAttribute("relatedQuestions",relatedQuestions);
         return "question";

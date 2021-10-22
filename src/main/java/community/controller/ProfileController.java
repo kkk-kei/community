@@ -2,6 +2,7 @@ package community.controller;
 
 import com.github.pagehelper.PageInfo;
 import community.dto.NotificationPageDTO;
+import community.dto.QuestionPageDTO;
 import community.model.User;
 import community.service.NotificationService;
 import community.service.QuestionService;
@@ -34,7 +35,8 @@ public class ProfileController{
         if ("questions".equals(action)){
             model.addAttribute("section","questions");
             model.addAttribute("sectionName","我的提问");
-            PageInfo pageInfo = questionService.getQuestionList(user.getId(), pageNum);
+//            PageInfo pageInfo = questionService.getQuestionList(user.getId(), pageNum);
+            QuestionPageDTO pageInfo = questionService.getQuestionList(user.getId(), pageNum);
             model.addAttribute(pageInfo);
             return "profile";
         }else if ("notification".equals(action)){

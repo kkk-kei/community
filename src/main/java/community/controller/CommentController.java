@@ -1,11 +1,10 @@
 package community.controller;
 
 import community.dto.CommentDTO;
-import community.dto.CommentReturnDTO;
+import community.dto.CommentRenderDTO;
 import community.dto.ResultDTO;
 import community.enums.CommentTypeEnum;
 import community.exception.CommonErrorCodeImp;
-import community.mapper.CommentMapper;
 import community.model.Comment;
 import community.model.User;
 import community.service.CommentService;
@@ -15,9 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class CommentController {
@@ -52,8 +49,8 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment/{id}",method = RequestMethod.GET)
-    public ResultDTO<List<CommentReturnDTO>> comments(@PathVariable(name="id") Long id){
-        List<CommentReturnDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.Comment);
+    public ResultDTO<List<CommentRenderDTO>> comments(@PathVariable(name="id") Long id){
+        List<CommentRenderDTO> commentDTOS = commentService.listByTargetId(id, CommentTypeEnum.Comment);
         return ResultDTO.okOf(commentDTOS);
     }
 }

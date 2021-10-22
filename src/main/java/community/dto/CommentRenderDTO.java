@@ -4,7 +4,7 @@ import community.model.User;
 import lombok.Data;
 
 @Data
-public class CommentReturnDTO {
+public class CommentRenderDTO {
     private Long id;
     private Long parentId;
     private Integer type;

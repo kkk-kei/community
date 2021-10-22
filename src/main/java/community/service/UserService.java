@@ -25,7 +25,6 @@ public class UserService {
             userDB.setGmtCreate(System.currentTimeMillis());
             userDB.setGmtModify(System.currentTimeMillis());
             userMapper.insert(userDB);
-//            userMapper.insertUser(userDB);
         }else{
             userDB.setGmtModify(System.currentTimeMillis());
             UserExample userExample = new UserExample();

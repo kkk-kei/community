@@ -18,14 +18,6 @@ public class CommonExceptionController implements ErrorController{
     @RequestMapping("/error")
     public ModelAndView handleError(HttpServletRequest request,
                                     HttpServletResponse response, Model model) {
-//        int status = response.getStatus();
-//        if ( status == HttpStatus.NOT_FOUND.value()) {
-//            System.out.println("Error with code " + status + " Happened!");
-//            return new ModelAndView("error-404");
-//        } else if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-//            System.out.println("Error with code " + status + " Happened!");
-//            return new ModelAndView("error-500");
-//        }
         HttpStatus status = getStatus(request);
         if(status.is4xxClientError()){
             model.addAttribute("errormsg","客户端歇逼了~");
