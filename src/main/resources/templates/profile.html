@@ -16,8 +16,8 @@
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h2><span th:text="${sectionName}"></span></h2><hr>
-
-            <div class="media" th:each="question : ${pageInfo.list}">
+            <!--我的问题-->
+            <div th:if="${section == 'questions'}" class="media" th:each="question : ${pageInfo.list}">
                 <div class="media-left">
                     <a>
                         <img class="media-object" th:src="${question.user.avatarUrl}">
@@ -26,6 +26,18 @@
                 <div class="media-body">
                     <a th:href="'/question/'+${question.id}"><h4 class="media-heading" th:text="${question.title}"></h4></a>
                     <span class="text-desc"><span th:text="${question.viewCount}"></span> 个浏览 • <span th:text="${question.commentCount}"></span> 个回复 • <span th:text="${question.likeCount}"></span> 个点赞 • <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:MM')}"></span></span>
+                </div><hr>
+            </div>
+            <!--   通知         -->
+            <div class="media" th:if="${section == 'notification'}" th:each="notification : ${pageInfo.list}">
+                <div class="media-body">
+                    <h4 class="media-heading">
+                        <a href="#" th:text="${notification.notifierName}"></a>
+                        <span th:text="${notification.typeName}"></span>
+                        <a th:href="'/notification/'+${notification.id}"><span th:text="${notification.outerTitle}"></span></a>
+                        <span th:if="${notification.status == 0}" class="badge">未读</span>
+                    </h4>
+                    <span th:text="${#dates.format(notification.gmtCreate,'yyyy-MM-dd HH:MM')}" class="pull-right"></span>
                 </div><hr>
             </div>
 
@@ -43,7 +55,9 @@
                         </a>
                     </li>
 
-                    <li th:each="page : ${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum == page?'active':''}"><a th:text="${page}" th:href="@{'?pageNum='+${page}}"></a></li>
+                    <li th:each="page : ${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum == page?'active':''}">
+                        <a th:text="${page}" th:href="@{'?pageNum='+${page}}"></a>
+                    </li>
 
                     <li th:if="${pageInfo.hasNextPage}">
                         <a href="#" aria-label="Next" th:href="@{'?pageNum='+${pageInfo.getPageNum()+1}}">
@@ -64,10 +78,11 @@
                 <a href="/profile/center" th:class="${section == 'center' ? 'list-group-item list-group-item-info' : 'list-group-item'}"><span class="glyphicon glyphicon-home"></span>&nbsp个人资料</a>
                 <a href="/profile/questions" th:class="${section == 'questions' ? 'list-group-item list-group-item-info' : 'list-group-item'}"><span class="glyphicon glyphicon-edit"></span>&nbsp我的提问</a>
                 <a href="#" class="list-group-item"><span class="glyphicon glyphicon-star"></span>&nbsp我的关注</a>
-                <a href="#" class="list-group-item"><span class="glyphicon glyphicon-comment"></span><span class="badge">14</span>&nbsp我的回复</a>
+                <a href="/profile/notification" th:class="${section == 'notification' ? 'list-group-item list-group-item-info' : 'list-group-item'}"><span class="glyphicon glyphicon-comment"></span><span class="badge" th:text="${session.unreadCount}"></span>&nbsp;最新通知</a>
             </div>
         </div>
     </div>
 </div>
+<div th:insert="footer :: foot"></div>
 </body>
 </html>

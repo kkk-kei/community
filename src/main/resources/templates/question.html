@@ -7,10 +7,23 @@
     <link rel="stylesheet" href="/css/bootstrap.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.css"/>
     <link rel="stylesheet" href="/css/community.css"/>
+    <link rel="stylesheet" href="/editormd/css/editormd.preview.css" />
     <script type="text/javascript" src="/jquery/jquery-3.6.0.js"></script>
     <script type="text/javascript" src="/js/bootstrap.js"></script>
     <script type="text/javascript" src="/js/community.js"></script>
     <script type="text/javascript" src="/js/moment.mini.js"></script>
+    <script src="/editormd/editormd.js"></script>
+    <script src="/editormd/lib/marked.min.js"></script>
+    <script src="/editormd/lib/prettify.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var testView = editormd.markdownToHTML("question-view", {
+                // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+                // htmlDecode : true,  // Enable / disable HTML tag encode.
+                // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -33,7 +46,9 @@
                     </span>
                 </div>
                 <hr>
-                <div th:text="${question.description}"></div>
+                <div id="question-view">
+                    <textarea style="display:none;" th:text="${question.description}"></textarea>
+                </div>
 
                 <div class="questionbtngroup" th:if="${question.user.accountId == session.user.accountId}">
                     <a class="btn btn-danger" th:href="'/publish/'+${question.id}" role="button">编辑</a>
@@ -43,7 +58,7 @@
             </div>
             <!--    评论框        -->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <img class="media-object img-rounded img-comment" th:src="${question.user.avatarUrl}">
+                <img class="media-object img-rounded img-comment" th:src="${session.user.avatarUrl}">
                 <input type="hidden" th:value="${question.id}" id="questionId">
                 <textarea class="form-control" rows="6" id="questionComment"></textarea>
                 <button type="button" class="btn btn-success btn-comment" onclick="postCommentToQuestion()">回复</button>
@@ -120,6 +135,6 @@
         </div>
     </div>
 </div>
-
+<div th:insert="footer :: foot"></div>
 </body>
 </html>

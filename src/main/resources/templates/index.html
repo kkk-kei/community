@@ -42,25 +42,27 @@
             <nav class="pageNav" aria-label="Page navigation" th:if="pageInfo.pages!=0">
                 <ul class="pagination">
                     <li th:if="${pageInfo.navigateFirstPage!=1}">
-                        <a  aria-label="Previous" th:href="@{'?pageNum='+${1}}">
+                        <a  aria-label="Previous" th:href="@{'?pageNum='+${1}+'&search='+${search}}">
                             <span aria-hidden="true">&lt;&lt;</span>
                         </a>
                     </li>
                     <li th:if="${pageInfo.hasPreviousPage}">
-                        <a href="#" aria-label="Previous" th:href="@{'?pageNum='+${pageInfo.getPageNum()-1}}">
+                        <a href="#" aria-label="Previous" th:href="@{'?pageNum='+${pageInfo.getPageNum()-1}+'&search='+${search}}">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
 
-                    <li th:each="page : ${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum == page?'active':''}"><a th:text="${page}" th:href="@{'?pageNum='+${page}}"></a></li>
+                    <li th:each="page : ${pageInfo.navigatepageNums}" th:class="${pageInfo.pageNum == page?'active':''}">
+                        <a th:text="${page}" th:href="@{'?pageNum='+${page}+'&search='+${search}}"></a>
+                    </li>
 
                     <li th:if="${pageInfo.hasNextPage}">
-                        <a href="#" aria-label="Next" th:href="@{'?pageNum='+${pageInfo.getPageNum()+1}}">
+                        <a href="#" aria-label="Next" th:href="@{'?pageNum='+${pageInfo.getPageNum()+1}+'&search='+${search}}">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pageInfo.navigateLastPage!=pageInfo.pages}">
-                        <a aria-label="Next" th:href="@{'?pageNum='+${pageInfo.pages}}">
+                        <a aria-label="Next" th:href="@{'?pageNum='+${pageInfo.pages}+'&search='+${search}}">
                             <span aria-hidden="true">&gt;&gt;</span>
                         </a>
                     </li>
@@ -72,5 +74,6 @@
         </div>
     </div>
 </div>
+<div th:insert="footer :: foot"></div>
 </body>
 </html>

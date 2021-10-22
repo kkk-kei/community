@@ -8,16 +8,17 @@
                         <a class="navbar-brand" href="/">GZHU</a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <form class="navbar-form navbar-left">
+                        <form class="navbar-form navbar-left" action="/" method="get">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Input Question">
+                                <input type="text" class="form-control" placeholder="Input Question" name="search">
                             </div>
                             <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span>Search</button>
                         </form>
                         <ul class="nav navbar-nav navbar-right">
                             <li th:if="${session.user==null}"><a href="https://gitee.com/oauth/authorize?client_id=9de7b0e384f6b58f6a44c5b4152d05587fe19a5f3df5937b9115bcd4e75e20de&redirect_uri=http://localhost:8080/login&response_type=code">Login</a></li>
                             <li th:if="${session.user!=null}"><a href="/publish">提问</a></li>
-                            <li th:unless="${session.user==null}" class="dropdown">
+                            <li th:if="${session.user!=null}"><a href="/profile/notification">通知&nbsp;<span class="badge" th:text="${session.unreadCount}"></span></a></li>
+                            <li th:if="${session.user!=null}" class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                                     <span th:text="${session.user.getName()}"></span><span class="caret"></span></a>
                                 <ul class="dropdown-menu">

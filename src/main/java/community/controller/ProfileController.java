@@ -1,7 +1,9 @@
 package community.controller;
 
 import com.github.pagehelper.PageInfo;
+import community.dto.NotificationPageDTO;
 import community.model.User;
+import community.service.NotificationService;
 import community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ public class ProfileController{
 
     @Autowired
     QuestionService questionService = null;
+    @Autowired
+    NotificationService notificationService = null;
 
     @GetMapping("/profile/{action}")
     public String toProfile(HttpServletRequest request,
@@ -30,13 +34,16 @@ public class ProfileController{
         if ("questions".equals(action)){
             model.addAttribute("section","questions");
             model.addAttribute("sectionName","我的提问");
-        }else if ("center".equals(action)){
-            model.addAttribute("section","center");
-            model.addAttribute("sectionName","个人资料");
+            PageInfo pageInfo = questionService.getQuestionList(user.getId(), pageNum);
+            model.addAttribute(pageInfo);
+            return "profile";
+        }else if ("notification".equals(action)){
+            model.addAttribute("section","notification");
+            model.addAttribute("sectionName","最新通知");
+            NotificationPageDTO notificationList = notificationService.getNotificationList(user.getId(), pageNum);
+            model.addAttribute("pageInfo",notificationList);
+            return "profile";
         }
-
-        PageInfo pageInfo = questionService.getQuestionList(user.getId(), pageNum);
-        model.addAttribute(pageInfo);
         return "profile";
     }
 }

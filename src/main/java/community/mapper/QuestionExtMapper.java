@@ -10,4 +10,5 @@ public interface QuestionExtMapper {
     int increaseView(Question record);
     int increaseComment(Question record);
     List<Question> selectRelated(Question record);
+    List<Question> selectBySearch(@Param("search") String search);
 }

@@ -9,6 +9,7 @@ import community.mapper.QuestionMapper;
 import community.mapper.UserMapper;
 import community.model.Question;
 import community.model.QuestionExample;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,26 @@ public class QuestionService {
     @Autowired
     QuestionExtMapper questionExtMapper = null;
 
-    public PageInfo getQuestionList(Integer pageNum){
-
+    public PageInfo getQuestionList(String regexpSearch,Integer pageNum){
+//        List<Question> questionList;
+//        if("null".equals(regexpSearch)||regexpSearch==null){
+//            System.out.println("2222222");
+//            PageHelper.startPage(pageNum,5);
+//            QuestionExample questionExample = new QuestionExample();
+//            questionExample.setOrderByClause("gmt_create desc");
+//            questionList = questionMapper.selectByExample(questionExample);
+//        }else{
+//            System.out.println("1111111111");
+//            PageHelper.startPage(pageNum,5);
+//            questionList = questionExtMapper.selectBySearch(regexpSearch);
+//        }
         PageHelper.startPage(pageNum,5);
-        QuestionExample questionExample = new QuestionExample();
-        questionExample.setOrderByClause("gmt_create desc");
-        List<Question> questionList = questionMapper.selectByExample(questionExample);
-//        List<Question> questionList = questionMapper.getAll();
+        List<Question> questionList = questionExtMapper.selectBySearch(regexpSearch);
 
         for (Question question : questionList) {
-//            question.setRemark(userMapper.findByID(question.getCreator()).getAvatarUrl());
             question.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
-//            System.out.println(question);
         }
+
         PageInfo<Question> pageInfo = new PageInfo<>(questionList);
         return pageInfo;
     }
@@ -51,7 +59,7 @@ public class QuestionService {
         questionExample.createCriteria()
                 .andCreatorEqualTo(id);
         questionExample.setOrderByClause("gmt_create desc");
-        final List<Question> questionList = questionMapper.selectByExample(questionExample);
+        List<Question> questionList = questionMapper.selectByExample(questionExample);
 
         for (Question question : questionList) {
 //            question.setRemark(userMapper.findByID(question.getCreator()).getAvatarUrl());

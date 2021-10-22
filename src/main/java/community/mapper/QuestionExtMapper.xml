@@ -43,4 +43,14 @@
     select * from question where id != #{id} and tag regexp #{tag} limit 5;
   </select>
 
+  <select id="selectBySearch" resultType="question">
+    select * from question
+    <where>
+      <if test="search != null and search != 'null' and search != ''">
+        title regexp #{search}
+      </if>
+    </where>
+    order by gmt_create desc
+  </select>
+
 </mapper>
